@@ -1,0 +1,17 @@
+services:
+
+  redis-db:
+    image: redis-db
+    build: ./redis-database
+    volumes:
+      - ./redis-database/data:/data
+
+  telegram-bot:
+    image: python-telegram-bot
+    build: ./telegram-bot-python
+    environment:
+      - TOKEN=${TOKEN}
+
+  debug:
+    image: debug
+    build: ./debug
