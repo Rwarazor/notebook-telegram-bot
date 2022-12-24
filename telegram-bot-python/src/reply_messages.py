@@ -9,5 +9,5 @@ help_message = (
 	" - /async_heavy_spam will wait for ~10 seconds"
 	" (simulating waiting for server responce," 
 	" while no calculations are done) and send back a message."
-	" You can type this command several times to observe that all of them still run for ~10 seconds and not 10 times the number of calls. You can also run it and then call another function to observe that the bot is not blocked.
+	" You can type this command several times to observe that all of them still run for ~10 seconds and not 10 times the number of calls. You can also run it and then call another function to observe that the bot is not blocked."
 )
