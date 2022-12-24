@@ -121,6 +121,33 @@ async def del_note_title(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 	return ConversationHandler.END
 
+async def show_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+	await update.message.reply_text(
+		"Type a title of the note you want to view",
+		reply_markup=ReplyKeyboardMarkup(
+			[["/cancel"]], one_time_keyboard=True, input_field_placeholder="type title of note here"
+		),
+	)
+
+	return TITLE
+
+async def show_note_title(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+	user = update.message.from_user
+
+	if redis_client.hexists("user:" + str(user.id), update.message.text):
+		reply_text = "Note " + update.message.text + " is:\n" + str(redis_client.hget("user:" + str(user.id), update.message.text))
+		await context.bot.send_message(chat_id=update.effective_chat.id, text=reply_text)
+		return ConversationHandler.END
+	else:
+		context.user_data["next_title"] = update.message.text
+		await update.message.reply_text(
+			"There is no such note, try again",
+			reply_markup=ReplyKeyboardMarkup(
+				[["/cancel"]], one_time_keyboard=True, input_field_placeholder="type title of note here"
+			),
+		)
+		return TITLE
+
 if __name__ == '__main__':
 	token = os.environ['TOKEN']
 	application = (
@@ -156,6 +183,15 @@ if __name__ == '__main__':
 		fallbacks=[CommandHandler("cancel", cancel)],
 	)
 	application.add_handler(del_note_conv_handler)
+
+	show_note_conv_handler = ConversationHandler(
+		entry_points=[CommandHandler("show_note", show_note)],
+		states={
+			TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, show_note_title)]
+		},
+		fallbacks=[CommandHandler("cancel", cancel)],
+	)
+	application.add_handler(show_note_conv_handler)
 
 
 	unknown_handler = MessageHandler(filters.COMMAND, unknown)
