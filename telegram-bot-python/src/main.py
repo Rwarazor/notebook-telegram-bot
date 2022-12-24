@@ -96,7 +96,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def ls_notes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	user = update.message.from_user
 	titles = redis_client.hkeys("user:" + str(user.id))
-	reply_text = "Your notes:\n" + "\n".join(['- ' + title for title in titles])
+	reply_text = "Your have " + str(len(titles)) + ":\n" + "\n".join(['- ' + title for title in titles])
 	await context.bot.send_message(chat_id=update.effective_chat.id, text=reply_text)
 
 async def del_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
