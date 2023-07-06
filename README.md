@@ -1,3 +1,5 @@
+Simple notes telegram bot with python-telegram-bot + redis, using Docker containers.
+
 To build project:
  - clone/pull repository
  - in root of repository create file .env and add line 
